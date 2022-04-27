@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col w-96 h-screen px-4 py-8 overflow-y-auto border-r">
+  <div class="flex flex-col h-screen px-4 py-8 overflow-y-auto border-r w-96">
     <h2 class="text-3xl font-semibold text-center text-blue-800">
       <img src="../assets/images/logo_b14.png" alt="" class="w-24 m-auto" />
     </h2>
@@ -12,9 +12,6 @@
               <span class="mx-1 font-medium">{{ pref.prefName }}</span>
             </label>
           </li>
-          {{
-            isPref
-          }}
         </ul>
       </aside>
     </div>
@@ -22,43 +19,26 @@
 </template>
 
 <script>
-import { reactive } from "vue";
-// import axios from "axios";
-// import api from "../plugins/resas.js";
+import { reactive, onMounted } from "vue";
+import axios from "axios";
+import api from "../plugins/resas.js";
 import { useStore } from "vuex";
 
 export default {
   setup() {
     const store = useStore();
-    const prefData = reactive([
-      {
-        prefName: "テスト",
-        prefId: 1,
-      },
-      {
-        prefName: "テスト",
-        prefId: 2,
-      },
-      {
-        prefName: "テスト",
-        prefId: 3,
-      },
-      {
-        prefName: "テスト",
-        prefId: 4,
-      },
-    ]);
+    const prefData = reactive([]);
     const isPref = reactive([]);
 
-    // onMounted(async () => {
-    //   await axios
-    //     .get("https://opendata.resas-portal.go.jp/api/v1/prefectures", {
-    //       headers: { "X-API-KEY": api.key },
-    //     })
-    //     .then((res) => {
-    //       prefData.push(...res.data.result);
-    //     });
-    // });
+    onMounted(async () => {
+      await axios
+        .get("https://opendata.resas-portal.go.jp/api/v1/prefectures", {
+          headers: { "X-API-KEY": api.key },
+        })
+        .then((res) => {
+          prefData.push(...res.data.result);
+        });
+    });
 
     const isActivePref = (val) => {
       const isExistencePref = isPref.indexOf(val);

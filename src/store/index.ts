@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-// import axios from "axios";
+import axios from "axios";
 
 export default createStore({
   state: {
@@ -7,21 +7,26 @@ export default createStore({
   },
   getters: {},
   mutations: {
-    test(state: any, payload) {
+    fetchPrefs(state: any, payload) {
       state.resPref = payload;
     },
   },
   actions: {
-    async fetchPrefs({ commit }, payload) {
-      console.log(payload);
-      commit("test", payload);
-      // const response = await axios.get(
-      //   `https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?prefCode=${pref.prefCode}&cityCode="-"`,
-      //   {
-      //     headers: { "X-API-KEY": api.key },
-      //   }
-      // );
-      // commit("setTodos", response.data);
+    fetchPrefs({ commit }, payload) {
+      const fetchPerData: any = [];
+      payload.isPref.forEach((element: any) => {
+        axios
+          .get(
+            `https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?prefCode=${element.prefCode}&cityCode=-`,
+            {
+              headers: { "X-API-KEY": "kwbyqq3VlUfx9c8DGb7YqA3a2E2C1iJ2xWgrtSmC" },
+            }
+          )
+          .then((res) => {
+            fetchPerData.push(res.data.result);
+          });
+      });
+      commit("fetchPrefs", fetchPerData);
     },
   },
   modules: {},
