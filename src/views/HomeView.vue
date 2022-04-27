@@ -1,6 +1,8 @@
 <template>
-  <NavBar />
-  <TopFront />
+  <div class="flex">
+    <NavBar />
+    <TopFront />
+  </div>
 </template>
 
 <script>

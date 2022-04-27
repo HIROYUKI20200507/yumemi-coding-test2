@@ -1,61 +1,82 @@
 <template>
-  <div v-if="isSidebar">
-    <ul v-for="(pref, index) of prefData" :key="index" class="flex">
-      <li class="m-auto mt-5">
-        <label>
-          <input type="checkbox" :value="pref" v-model="isActivePref" />
-          {{ pref.prefName }}
-        </label>
-      </li>
-    </ul>
+  <div class="flex flex-col w-96 h-screen px-4 py-8 overflow-y-auto border-r">
+    <h2 class="text-3xl font-semibold text-center text-blue-800">
+      <img src="../assets/images/logo_b14.png" alt="" class="w-24 m-auto" />
+    </h2>
+    <div class="flex flex-col justify-between mt-6">
+      <aside>
+        <ul class="grid grid-cols-2 gap-1">
+          <li class="mt-5" v-for="(pref, index) of prefData" :key="index">
+            <label class="items-center px-2 py-1 text-gray-700">
+              <input type="checkbox" @change="isActivePref(pref)" />
+              <span class="mx-1 font-medium">{{ pref.prefName }}</span>
+            </label>
+          </li>
+          {{
+            isPref
+          }}
+        </ul>
+      </aside>
+    </div>
   </div>
-
-  <div @click="isSidebarActive"></div>
 </template>
 
 <script>
-import { ref, reactive, onMounted } from "vue";
-import axios from "axios";
-import api from "../plugins/resas.js";
-// import { useStore } from "vuex";
+import { reactive } from "vue";
+// import axios from "axios";
+// import api from "../plugins/resas.js";
+import { useStore } from "vuex";
 
 export default {
   setup() {
-    // const store = useStore();
-    const prefData = reactive([]);
-    const isSidebar = ref(true);
-    const isActivePref = reactive([]);
+    const store = useStore();
+    const prefData = reactive([
+      {
+        prefName: "テスト",
+        prefId: 1,
+      },
+      {
+        prefName: "テスト",
+        prefId: 2,
+      },
+      {
+        prefName: "テスト",
+        prefId: 3,
+      },
+      {
+        prefName: "テスト",
+        prefId: 4,
+      },
+    ]);
+    const isPref = reactive([]);
 
-    const isSidebarActive = () => {
-      if (isSidebar.value) {
-        isSidebar.value = false;
-      } else {
-        isSidebar.value = true;
-      }
-    };
-
-    onMounted(async () => {
-      await axios
-        .get("https://opendata.resas-portal.go.jp/api/v1/prefectures", {
-          headers: { "X-API-KEY": api.key },
-        })
-        .then((res) => {
-          prefData.push(...res.data.result);
-        });
-    });
-
-    // watch(isActivePref, () => {
-    //   store.dispatch("fetchPrefs", { isActivePref });
+    // onMounted(async () => {
+    //   await axios
+    //     .get("https://opendata.resas-portal.go.jp/api/v1/prefectures", {
+    //       headers: { "X-API-KEY": api.key },
+    //     })
+    //     .then((res) => {
+    //       prefData.push(...res.data.result);
+    //     });
     // });
+
+    const isActivePref = (val) => {
+      const isExistencePref = isPref.indexOf(val);
+
+      if (isExistencePref === -1) {
+        isPref.push(val);
+      } else {
+        isPref.splice(isExistencePref, 1);
+      }
+
+      store.dispatch("fetchPrefs", { isPref });
+    };
 
     return {
       prefData,
-      isSidebar,
-      isSidebarActive,
+      isPref,
       isActivePref,
     };
   },
 };
 </script>
-
-<style></style>
