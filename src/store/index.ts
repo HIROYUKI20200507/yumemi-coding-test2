@@ -7,7 +7,7 @@ export default createStore({
   },
   getters: {},
   mutations: {
-    fetchPrefs(state: any, payload) {
+    getPrefs(state: any, payload) {
       state.resPref = payload;
     },
   },
@@ -23,10 +23,10 @@ export default createStore({
             }
           )
           .then((res) => {
-            fetchPerData.push(res.data.result);
+            fetchPerData.push({ name: element.prefName, ...res.data.result.data[0] });
+            commit("getPrefs", fetchPerData);
           });
       });
-      commit("fetchPrefs", fetchPerData);
     },
   },
   modules: {},
