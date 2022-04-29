@@ -36,9 +36,15 @@ export default createStore({
               fetchYear.push(ele.year);
             });
 
+            // rgb値自動生成
+            const min = 10000;
+            const max = 19999;
+            const NUM = Math.floor(Math.random() * (max + 1 - min)) + min;
+            const NUM2 = ("" + NUM).slice(-10);
+
             fetchPerData.push({
               label: element.prefName,
-              backgroundColor: "#f87979",
+              backgroundColor: `#f${NUM2}`,
               data: fetchPramNum,
             });
             commit("getPrefs", fetchPerData);
