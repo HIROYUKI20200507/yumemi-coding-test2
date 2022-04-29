@@ -1,6 +1,6 @@
 <template>
-  <div class="w-full h-full p-4 m-8 overflow-y-auto">
-    <div class="text-xl bold">都道府県別の総人口推移グラフ</div>
+  <div class="w-full h-full p-4 mt-10 overflow-y-auto">
+    <div class="text-center bold">都道府県別の総人口推移グラフ</div>
     <Bar
       :chart-options="chartOptions"
       :chart-data="chartData"
