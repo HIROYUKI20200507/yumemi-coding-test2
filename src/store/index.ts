@@ -4,11 +4,15 @@ import axios from "axios";
 export default createStore({
   state: {
     resPref: [],
+    year: [],
   },
   getters: {},
   mutations: {
     getPrefs(state: any, payload) {
       state.resPref = payload;
+    },
+    getYears(state: any, payload) {
+      state.year = payload;
     },
   },
   actions: {
@@ -23,8 +27,22 @@ export default createStore({
             }
           )
           .then((res) => {
-            fetchPerData.push({ name: element.prefName, ...res.data.result.data[0] });
+            const pram = res.data.result.data[0].data;
+            const fetchYear: number[] = [];
+            const fetchPramNum: number[] = [];
+
+            pram.forEach((ele: any) => {
+              fetchPramNum.push(ele.value);
+              fetchYear.push(ele.year);
+            });
+
+            fetchPerData.push({
+              label: element.prefName,
+              backgroundColor: "#f87979",
+              data: fetchPramNum,
+            });
             commit("getPrefs", fetchPerData);
+            commit("getYears", fetchYear);
           });
       });
     },
